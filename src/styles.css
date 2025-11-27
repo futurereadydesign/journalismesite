@@ -46,14 +46,79 @@
   --grid-columns: 6;
   --grid-gap: 1rem;
   --grid-column-width: calc((100% - (var(--grid-columns) - 1) * var(--grid-gap)) / var(--grid-columns));
+  
+  /* ============================================
+     GRID LAYOUT SPANS - Centralized Definitions
+     ============================================
+     All grid-column spans are defined here as CSS variables.
+     To change a layout, update the variable value below.
+     
+     Usage: grid-column: var(--grid-text-start) / var(--grid-text-end);
+     ============================================ */
+  
+  /* Mobile (6-column grid) */
+  --grid-mobile-text-start: 1;
+  --grid-mobile-text-end: 7;
+  --grid-mobile-image-start: 1;
+  --grid-mobile-image-end: 7;
+  --grid-mobile-image-quote-start: 1;
+  --grid-mobile-image-quote-end: 7;
+  
+  /* iPad (12-column grid, 769px-1023px) */
+  --grid-ipad-text-start: 2;
+  --grid-ipad-text-end: 12;
+  --grid-ipad-image-start: 1;
+  --grid-ipad-image-end: 12;
+  --grid-ipad-margin-start: 9;
+  --grid-ipad-margin-end: 13;
+  --grid-ipad-image-quote-start: 1;
+  --grid-ipad-image-quote-end: 13;
+  
+  /* Desktop (16-column grid, 1024px+) */
+  /* Sidebar: 1-4, Gap: 5, Content: 6-16 */
+  --grid-sidebar-start: 1;
+  --grid-sidebar-end: 5;
+  --grid-content-start: 6;
+  --grid-content-end: 17;
+  --grid-text-start: 6;
+  --grid-text-end: 14;
+  --grid-image-start: 5;
+  --grid-image-end: 15;
+  --grid-margin-start: 13;
+  --grid-margin-end: 17;
+  --grid-image-quote-start: 6;
+  --grid-image-quote-end: 16;
 }
 
-/* Desktop grid system - override at root for desktop */
+/* Desktop grid system - 12 columns for medium screens */
 @media (min-width: 769px) {
   :root {
     --grid-columns: 12;
     --grid-gap: 1.5rem;
     --grid-column-width: calc((100% - (var(--grid-columns) - 1) * var(--grid-gap)) / var(--grid-columns));
+  }
+}
+
+/* Desktop grid system - 16 columns when sidebar appears */
+@media (min-width: 1024px) {
+  :root {
+    --grid-columns: 16;
+    --grid-gap: 1.5rem;
+    --grid-column-width: calc((100% - (var(--grid-columns) - 1) * var(--grid-gap)) / var(--grid-columns));
+  }
+}
+
+/* Very large screens - increase font sizes for readability */
+@media (min-width: 1400px) {
+  :root {
+    /* Increase all font steps by ~15-20% for better readability on large screens */
+    --step--2: clamp(0.83rem, 0.80rem + 0.15vw, 1.05rem);
+    --step--1: clamp(0.93rem, 0.90rem + 0.20vw, 1.15rem);
+    --step-0:  clamp(1.00rem, 0.95rem + 0.30vw, 1.35rem); /* body - increased from 1.125rem */
+    --step-1:  clamp(1.25rem, 1.12rem + 0.60vw, 1.75rem);
+    --step-2:  clamp(1.563rem, 1.25rem + 1.20vw, 2.20rem);
+    --step-3:  clamp(1.953rem, 1.40rem + 1.90vw, 2.90rem);
+    --step-4:  clamp(2.441rem, 1.80rem + 2.60vw, 3.75rem);
   }
 }
 
@@ -344,19 +409,28 @@ body.intro-active {
 .draggable-image-stack {
   position: relative;
   width: 100%;
-  height: 100%;
-  min-height: 500px;
+  min-height: 37.5rem; /* 600px converted to rem */
   overflow: visible; /* Allow images to be dragged outside container */
   user-select: none;
   -webkit-user-select: none;
   touch-action: none;
-  padding: 50px; /* Add padding so cards don't get cut off at edges */
+  padding: 3.125rem; /* 50px converted to rem - add padding so cards don't get cut off at edges */
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+/* Make the container more horizontal on larger screens */
+@media (min-width: 769px) {
+  .draggable-image-stack {
+    aspect-ratio: 16 / 9;
+    min-height: 37.5rem; /* 600px converted to rem */
+  }
 }
 
 .draggable-image {
   position: absolute;
-  width: var(--card-width, 300px);
-  height: auto;
+  width: var(--card-width, clamp(10rem, 30%, 18.75rem));
+  height: var(--card-height, auto);
   left: var(--card-left, 0);
   top: var(--card-top, 0);
   will-change: transform;
@@ -377,9 +451,9 @@ body.intro-active {
   width: 100%;
   height: auto;
   display: block;
-  border: 8px solid #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-radius: 2px;
+  border: 0.5rem solid #fff; /* 8px converted to rem */
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15); /* 4px 12px converted to rem */
+  border-radius: 0.125rem; /* 2px converted to rem */
   background-color: #f5f5f5;
   pointer-events: none;
   user-select: none;
@@ -388,7 +462,7 @@ body.intro-active {
 
 .draggable-image img.error {
   background-color: #e0e0e0;
-  border: 8px dashed #ccc;
+  border: 0.5rem dashed #ccc; /* 8px converted to rem */
 }
 
 /* Anna section styles */
@@ -397,55 +471,127 @@ body.intro-active {
   margin-top: 1.5rem;
 }
 
+/* Sterke koffie section - extra bottom margin */
+.grid-item-spacing-xl:has(.section-heading + .anna-section) {
+  margin-bottom: 10rem;
+}
+
+/* Reduce gap between heading and anna-section in Sterke koffie */
+.grid-item-spacing-xl:has(.section-heading + .anna-section) .section-heading {
+  margin-bottom: 1rem; /* Reduced spacing between title and content */
+}
+
+.grid-item-spacing-xl:has(.section-heading + .anna-section) .anna-section {
+  margin-top: 0; /* Remove the 1.5rem top margin */
+}
+
 .anna-quote {
   display: flex;
   flex-direction: column;
   max-width: 100%;
+  position: relative;
+  z-index: 1; /* Above portrait */
 }
 
 .anna-image {
   position: absolute;
-  right: -200px; /* Position in right margin */
+  right: -100px; /* Overlap with text - moved closer */
   top: 0;
-  width: 150px;
+  width: 195px; /* 150px * 1.3 = 195px */
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  z-index: 0; /* Behind text */
 }
 
 .anna-drawing {
   width: 100%;
   height: auto;
   display: block;
-  mix-blend-mode: multiply;
+  filter: grayscale(100%);
+  opacity: 0.6;
+  transform: scale(1.3);
 }
 
 /* Bowling image with audio button */
+.bowling-image-wrapper {
+  overflow: visible;
+}
+
+.bowling-image-frame {
+  position: relative;
+  width: 100%;
+  margin: 0;
+}
+
 .bowling-image-container {
   position: relative;
   width: 100%;
+  overflow: visible; /* Allow button to overflow and overlap text */
 }
 
 .bowling-image {
   width: 100%;
   height: auto;
   display: block;
-  mix-blend-mode: multiply;
+  /* Match draggable image stack style */
+  border: 8px solid #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+  background-color: #f5f5f5;
 }
 
 .audio-button-overlay {
   position: absolute;
   top: 1rem;
-  right: 1rem;
+  right: -22px; /* Position on edge: half button width (44px / 2 = 22px) overlaps with text */
   z-index: 10;
-  background-color: var(--color-white);
-  border: 1px solid var(--color-black);
+  background: var(--color-primary);
+  border: 2px solid var(--color-black);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Mobile: column layout */
+.audio-button-overlay:hover {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Mobile: column layout - all images span full width (1 / 7) */
 @media (max-width: 768px) {
   .anna-section {
     position: relative;
+  }
+
+  /* All images span full width on mobile */
+  .chapter-image,
+  .bowling-image-frame,
+  .bowling-image-container,
+  .wachten-margin-image,
+  .eten-thee-margin-image,
+  .kantlijn-image {
+    grid-column: var(--grid-mobile-image-start) / var(--grid-mobile-image-end);
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    position: static;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    transform: none;
+  }
+
+  .bowling-image-frame {
+    padding: 0.75rem;
+  }
+  
+  .chapter-image {
+    margin: 2rem 0;
+  }
+  
+  .audio-button-overlay {
+    right: -18px; /* Slightly less overlap on mobile */
   }
   
   .anna-image {
@@ -453,13 +599,32 @@ body.intro-active {
     right: auto;
     top: auto;
     width: 100%;
-    max-width: 200px;
+    max-width: 260px; /* 200px * 1.3 = 260px */
     margin-bottom: 1.5rem;
+    margin-left: -30px; /* Slight overlap on mobile */
     order: -1; /* Image first on mobile */
+  }
+  
+  .anna-drawing {
+    transform: scale(1.3);
   }
   
   .anna-quote {
     order: 1;
+  }
+  
+  .stok-image {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    display: block;
+  }
+  
+  .phone-image {
+    width: 100%;
+    max-width: 300px;
+    margin: 1rem auto;
+    display: block;
   }
 }
 
@@ -494,7 +659,6 @@ body.intro-active {
   width: 100%;
   height: auto;
   display: block;
-  mix-blend-mode: multiply;
 }
 
 /* Chapter image */
@@ -502,7 +666,17 @@ body.intro-active {
   width: 100%;
   height: auto;
   display: block;
-  mix-blend-mode: multiply;
+  margin: 4rem 0; /* Vertical margin only */
+}
+
+/* Chapter images that are photos get borders */
+.chapter-image[src$=".jpg"],
+.chapter-image[src$=".jpeg"],
+.chapter-image[src$=".png"],
+.chapter-image[src$=".webp"] {
+  border: 8px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
 }
 
 /* PDF image */
@@ -538,9 +712,9 @@ body.intro-active {
 
 .shirish-image {
   position: absolute;
-  right: -200px; /* Position in right margin */
+  right: -350px; /* Position in right margin */
   top: 0;
-  width: 150px;
+  width: 300px; /* Increased from 150px */
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -550,7 +724,9 @@ body.intro-active {
   width: 100%;
   height: auto;
   display: block;
-  mix-blend-mode: multiply;
+  transform: rotate(6deg); /* Tilt 6 degrees to the right */
+  opacity: 0.4; /* Make SVG grey when overlapping with text */
+  filter: grayscale(0.3); /* Additional grey effect */
 }
 
 /* Mobile: column layout for Shirish section */
@@ -564,7 +740,7 @@ body.intro-active {
     right: auto;
     top: auto;
     width: 100%;
-    max-width: 200px;
+    max-width: 400px;
     margin-bottom: 1.5rem;
     order: -1; /* Image first on mobile */
   }
@@ -606,7 +782,31 @@ body.intro-active {
   width: 100%;
   height: auto;
   display: block;
-  mix-blend-mode: multiply;
+}
+
+/* Everyone Can Travel image stack - aesthetic centered oversized images */
+.everyone-can-travel-stack {
+  position: relative;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  padding: 4rem 0;
+}
+
+.stack-image-top,
+.stack-image-bottom {
+  width: 180%; /* Oversized compared to text (text is ~100% of grid) */
+  max-width: calc(100vw - 4rem);
+  height: auto;
+  display: block;
+  margin: 0 auto; /* Center horizontally */
+}
+
+.stack-image-bottom {
+  margin-bottom: 0;
 }
 
 /* Afke section with margin image */
@@ -620,6 +820,8 @@ body.intro-active {
   flex-direction: column;
   gap: 1.5rem;
   max-width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .afke-image {
@@ -786,7 +988,6 @@ body.intro-active {
 }
 
 /* Chapter Section Styles - Mobile First */
-/* TODO: When implementing sidebar navigation, adjust grid to accommodate sidebar */
 .fortythree-section,
 .chapter {
   position: relative;
@@ -795,6 +996,15 @@ body.intro-active {
   gap: var(--grid-gap);
   align-items: start;
   padding: 2rem 1rem;
+}
+
+/* Desktop: When sidebar is present, chapters are grid items (no nested grid) */
+@media (min-width: 1024px) {
+  .fortythree-section,
+  .chapter {
+    grid-column: var(--grid-content-start) / var(--grid-content-end);
+    display: contents; /* Children become direct grid items of parent - allows grid-column to work */
+  }
 }
 
 /* Grid content wrapper */
@@ -809,6 +1019,7 @@ body.intro-active {
 .grid-item {
   position: relative;
   z-index: 1;
+  overflow: visible; /* Allow portraits and scaled images to overflow */
 }
 
 /* Mobile: all content spans full 6 columns (default/mobile-first) */
@@ -816,43 +1027,121 @@ body.intro-active {
 .fortythree-section h2,
 .fortythree-section p,
 .fortythree-section .grid-item {
-  grid-column: 1 / 7;
+  grid-column: var(--grid-mobile-text-start) / var(--grid-mobile-text-end);
+}
+
+/* Draggable image stack containers use image grid columns on mobile */
+.grid-item:has(.draggable-image-stack) {
+  grid-column: var(--grid-mobile-image-start) / var(--grid-mobile-image-end);
 }
 
 
 /* Nested grid for image/quote section - mobile */
 .fortythree-section .image-quote-section {
   grid-template-columns: repeat(6, var(--grid-column-width));
-  grid-column: 1 / 7;
+  grid-column: var(--grid-mobile-image-quote-start) / var(--grid-mobile-image-quote-end);
 }
 
 .fortythree-section .image-quote-section > div:first-child {
-  grid-column: 1 / 7;
+  grid-column: var(--grid-mobile-image-quote-start) / var(--grid-mobile-image-quote-end);
   margin-bottom: 2rem;
 }
 
 .fortythree-section .image-quote-section > div:last-child {
-  grid-column: 1 / 7;
+  grid-column: var(--grid-mobile-image-quote-start) / var(--grid-mobile-image-quote-end);
 }
 
-/* Desktop: 12 columns with offset layout */
-@media (min-width: 769px) {
+/* Desktop: 12 columns with offset layout (769px - 1023px) - iPad range */
+@media (min-width: 769px) and (max-width: 1023px) {
   .fortythree-section {
-    padding: 4rem 0;
+    padding: 4rem 1.5rem; /* Reduced padding and add horizontal padding for iPad */
   }
   
-  /* Desktop: content spans columns 2-9 (8 columns) */
+  /* iPad: content spans columns 2-11 (9 columns) for better readability */
   .fortythree-section h1,
   .fortythree-section h2,
   .fortythree-section p,
   .fortythree-section .grid-item {
-    grid-column: 2 / 10;
+    grid-column: var(--grid-ipad-text-start) / var(--grid-ipad-text-end);
   }
   
-  /* Nested grid for image/quote section - desktop */
+  /* Grid items containing images use image grid columns on iPad */
+  .grid-item:has(.chapter-image),
+  .grid-item:has(.bowling-image-container),
+  .grid-item:has(.bowling-image-frame),
+  .grid-item:has(.bowling-image) {
+    grid-column: var(--grid-ipad-image-start) / var(--grid-ipad-image-end);
+  }
+  
+  /* Big images span 1-11 (10 columns, almost full width) */
+  .chapter-image,
+  .bowling-image-container,
+  .bowling-image-frame {
+    grid-column: var(--grid-ipad-image-start) / var(--grid-ipad-image-end);
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  /* Draggable image stack containers use image grid columns on iPad */
+  .grid-item:has(.draggable-image-stack) {
+    grid-column: var(--grid-ipad-image-start) / var(--grid-ipad-image-end);
+  }
+  
+  /* Margin images span 9-12 (right margin, 3 columns) */
+  .wachten-margin-image,
+  .eten-thee-margin-image,
+  /* Grid items containing kantlijn-image: use flexbox for side-by-side layout */
+  .grid-item:has(.kantlijn-image) {
+    grid-column: var(--grid-ipad-text-start) / var(--grid-ipad-margin-end);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+    position: relative;
+  }
+  
+  /* Text content inside grid-item with kantlijn-image uses normal text width */
+  .grid-item:has(.kantlijn-image) > p,
+  .grid-item:has(.kantlijn-image) > h3 {
+    flex: 0 0 calc((var(--grid-ipad-text-end) - var(--grid-ipad-text-start)) * var(--grid-column-width) + (var(--grid-ipad-text-end) - var(--grid-ipad-text-start) - 1) * var(--grid-gap));
+    max-width: none; /* Remove the max-width constraint */
+  }
+  
+  /* Kantlijn images positioned next to text, not overlapping */
+  .kantlijn-image {
+    position: static !important;
+    flex-shrink: 0;
+    width: calc((var(--grid-ipad-margin-end) - var(--grid-ipad-margin-start)) * var(--grid-column-width) + (var(--grid-ipad-margin-end) - var(--grid-ipad-margin-start) - 1) * var(--grid-gap));
+    margin-right: 0 !important;
+    margin-left: 0;
+    z-index: 0;
+    transform: rotate(-5deg) scale(1.3) !important;
+  }
+  
+  /* Anna section on iPad: use display contents so children become direct grid items */
+  .anna-section {
+    display: contents;
+  }
+  
+  /* Anna quote on iPad uses regular text columns */
+  .anna-quote {
+    grid-column: var(--grid-ipad-text-start) / var(--grid-ipad-text-end);
+  }
+  
+  /* Anna image positioned in margin on iPad */
+  .anna-image {
+    grid-column: var(--grid-ipad-margin-start) / var(--grid-ipad-margin-end);
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    z-index: 0;
+  }
+  
+  /* Nested grid for image/quote section - iPad */
   .fortythree-section .image-quote-section {
     grid-template-columns: repeat(12, var(--grid-column-width));
-    grid-column: 2 / 10;
+    grid-column: var(--grid-ipad-image-quote-start) / var(--grid-ipad-image-quote-end);
   }
   
   .fortythree-section .image-quote-section > div:first-child {
@@ -862,6 +1151,143 @@ body.intro-active {
   
   .fortythree-section .image-quote-section > div:last-child {
     grid-column: 7 / 13;
+  }
+}
+
+/* Desktop: 16 columns with sidebar (1024px+) */
+@media (min-width: 1024px) {
+  /* Padding moved to first/last children since chapters use display: contents */
+  .fortythree-section > *:first-child,
+  .chapter > *:first-child {
+    margin-top: 6rem;
+  }
+  
+  .fortythree-section > *:last-child,
+  .chapter > *:last-child {
+    margin-bottom: 6rem;
+  }
+  
+  /* Content references parent .content-container grid directly */
+  /* Text spans columns 7-14 (8 columns) */
+  .fortythree-section h1,
+  .fortythree-section h2,
+  .fortythree-section p,
+  .fortythree-section .grid-item {
+    grid-column: var(--grid-text-start) / var(--grid-text-end);
+  }
+  
+  /* Grid items containing images use image grid columns */
+  .grid-item:has(.chapter-image),
+  .grid-item:has(.bowling-image-container),
+  .grid-item:has(.bowling-image-frame),
+  .grid-item:has(.bowling-image) {
+    grid-column: var(--grid-image-start) / var(--grid-image-end);
+  }
+  
+  /* Full width images use --grid-image-start/end variables for responsive layout */
+  .chapter-image,
+  .bowling-image-container,
+  .bowling-image-frame {
+    grid-column: var(--grid-image-start) / var(--grid-image-end);
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  /* Draggable image stack containers use image grid columns */
+  .grid-item:has(.draggable-image-stack) {
+    grid-column: var(--grid-image-start) / var(--grid-image-end);
+  }
+  
+  /* Margin images span columns 13-16 (4 columns) */
+  .wachten-margin-image,
+  .eten-thee-margin-image {
+    grid-column: var(--grid-margin-start) / var(--grid-margin-end);
+  }
+  
+  /* Grid items containing kantlijn-image: use flexbox for side-by-side layout */
+  .grid-item:has(.kantlijn-image) {
+    grid-column: var(--grid-text-start) / var(--grid-margin-end);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+    position: relative;
+  }
+  
+  /* Text content inside grid-item with kantlijn-image uses normal text width */
+  .grid-item:has(.kantlijn-image) > p,
+  .grid-item:has(.kantlijn-image) > h3 {
+    flex: 0 0 calc((var(--grid-text-end) - var(--grid-text-start)) * var(--grid-column-width) + (var(--grid-text-end) - var(--grid-text-start) - 1) * var(--grid-gap));
+    max-width: none; /* Remove the max-width constraint */
+  }
+  
+  /* Kantlijn images positioned next to text, not overlapping */
+  .kantlijn-image {
+    position: static !important;
+    flex-shrink: 0;
+    width: calc((var(--grid-margin-end) - var(--grid-margin-start)) * var(--grid-column-width) + (var(--grid-margin-end) - var(--grid-margin-start) - 1) * var(--grid-gap));
+    margin-right: 0 !important;
+    margin-left: 0;
+    z-index: 0;
+    transform: rotate(-5deg) scale(1.3) !important;
+  }
+  
+  /* Grid items containing anna-section: span from text to margin for absolute positioning context */
+  .grid-item:has(.anna-section) {
+    grid-column: var(--grid-text-start) / var(--grid-margin-end);
+    position: relative; /* Create positioning context for absolute anna-image */
+  }
+  
+  /* Anna section: use display contents so quote becomes direct grid item */
+  .anna-section {
+    display: contents;
+  }
+  
+  /* Anna quote uses regular text columns like other text (6-14) - same width as all text */
+  .anna-quote {
+    grid-column: var(--grid-text-start) / var(--grid-text-end);
+  }
+  
+  /* Anna image positioned absolutely in margin, overlapping with text */
+  .anna-image {
+    position: absolute !important; /* Override base styles */
+    right: 0 !important; /* Override base -100px */
+    top: 0 !important;
+    width: calc((var(--grid-margin-end) - var(--grid-margin-start)) * var(--grid-column-width) + (var(--grid-margin-end) - var(--grid-margin-start) - 1) * var(--grid-gap)) !important; /* Override base 195px */
+    margin-right: calc(-1 * ((var(--grid-text-end) - var(--grid-margin-start)) * var(--grid-column-width) + (var(--grid-text-end) - var(--grid-margin-start) - 1) * var(--grid-gap))); /* Overlap with text */
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    z-index: 0;
+    transform: rotate(-5deg); /* Slight rotation for visual interest */
+  }
+  
+  /* Anna drawing - 1.5x bigger, rotation handled by parent */
+  .anna-image .anna-drawing {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transform: scale(1.5) !important; /* 1.5x bigger, override base scale(1.3) */
+  }
+  
+  /* Image + quote sections span columns 6-15 (10 columns) - matches full width images */
+  .fortythree-section .image-quote-section {
+    grid-column: var(--grid-image-quote-start) / var(--grid-image-quote-end);
+    display: grid;
+    grid-template-columns: repeat(10, 1fr); /* Internal grid for image/quote layout */
+    gap: var(--grid-gap);
+  }
+  
+  .fortythree-section .image-quote-section > div:first-child {
+    grid-column: 1 / 5; /* Within the image-quote-section's 10-column grid */
+    margin-bottom: 0;
+  }
+  
+  .fortythree-section .image-quote-section > div:last-child {
+    grid-column: 6 / 11; /* Within the image-quote-section's 10-column grid */
   }
 }
 
@@ -1002,22 +1428,68 @@ body.intro-active {
   position: relative;
 }
 
+/* Desktop: Make content-container a grid when sidebar is visible */
+@media (min-width: 1024px) {
+  .content-container {
+    display: grid;
+    grid-template-columns: repeat(16, var(--grid-column-width));
+    gap: var(--grid-gap);
+    max-width: none; /* Remove max-width constraint */
+    width: 100%;
+    padding-left: 1.5rem;
+    padding-right: calc(2rem + 5%); /* Base rem value + percentage for scaling */
+    margin-left: 0; /* Ensure sidebar stays on left */
+    margin-right: 0;
+  }
+}
+
+/* Very large screens - keep sidebar on left, optimize text width for ~14 words per line */
+@media (min-width: 1400px) {
+  .content-container {
+    max-width: none; /* Remove max-width to keep sidebar on left */
+    margin-left: 0; /* Remove auto margin */
+    margin-right: 0;
+    padding-left: 2rem; /* Add more padding on left for sidebar spacing */
+    padding-right: calc(2rem + 10%); /* Increased percentage for very large screens */
+  }
+  
+  /* Add gap between sidebar and content */
+  .chapter-rail-desktop {
+    margin-right: 2rem; /* Space between sidebar and content */
+  }
+}
+
+/* Extra large screens - further adjust padding */
+@media (min-width: 1800px) {
+  .content-container {
+    padding-right: calc(2rem + 7%); /* Even more percentage for extra large screens */
+  }
+}
+
+/* Ultra-wide screens (2000px+) - prevent text from becoming too long */
+@media (min-width: 2000px) {
+  .content-container {
+    padding-left: calc(2rem + 6%); /* Increased percentage to maintain ~14 words per line */
+    padding-right: calc(20rem + 12%); /* Increased percentage to maintain ~14 words per line */
+  }
+}
+
 /* Paragraph margin bottom utilities */
 .p-mb-2 {
-  margin-bottom: 2rem;
+  margin-bottom: 3rem; /* Increased from 2rem */
 }
 
 .p-mb-3 {
-  margin-bottom: 3rem;
+  margin-bottom: 4.5rem; /* Increased from 3rem */
 }
 
 .p-mb-4 {
-  margin-bottom: 4rem;
+  margin-bottom: 6rem; /* Increased from 4rem */
 }
 
 /* Section title wrapper */
 .section-title-wrapper {
-  margin-bottom: 3rem;
+  margin-bottom: 5rem; /* Increased from 3rem */
 }
 
 .chapter-label {
@@ -1045,11 +1517,18 @@ body.intro-active {
   gap: 1rem;
 }
 
+/* Audio button in titles should align right */
+.section-title-with-audio > .audio-button {
+  margin-left: auto;
+}
+
 /* Paragraph base */
 .paragraph-base {
   font-size: var(--step-0);
   line-height: var(--lh-p);
   color: var(--color-black);
+  position: relative;
+  z-index: 1; /* Above portraits */
 }
 
 /* Narrator text - distinct styling for explanatory/narrator content */
@@ -1066,17 +1545,17 @@ body.intro-active {
 
 /* Grid item spacing */
 .grid-item-spacing {
-  margin-bottom: 2rem;
+  margin-bottom: 4rem; /* Increased from 2rem */
 }
 
 .grid-item-spacing-large {
-  margin-top: 4rem;
-  margin-bottom: 4rem;
+  margin-top: 6rem; /* Increased from 4rem */
+  margin-bottom: 6rem; /* Increased from 4rem */
 }
 
 .grid-item-spacing-xl {
-  margin-top: 6rem;
-  margin-bottom: 4rem;
+  margin-top: 8rem; /* Increased from 6rem */
+  margin-bottom: 6rem; /* Increased from 4rem */
 }
 
 /* Quote section */
@@ -1104,20 +1583,60 @@ body.intro-active {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  border: 1px solid var(--color-black);
-  background: var(--color-white);
+  border: 2px solid var(--color-black);
+  background: var(--color-primary);
+  color: var(--color-black);
   cursor: pointer;
   vertical-align: middle;
   padding: 0;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+  margin-left: auto; /* Align to the right */
+}
+
+/* Ensure audio buttons align right in their containers */
+.audio-button {
+  margin-left: auto;
+}
+
+/* Make grid-item containers with audio buttons use flexbox */
+.grid-item:has(.audio-button),
+.grid-item-spacing:has(.audio-button) {
+  display: flex;
+  flex-direction: column;
+  /* Don't align all items - let text stay left, button goes right */
+}
+
+/* Keep text content (like quotes and headings) aligned left and full width */
+.grid-item:has(.audio-button) > .large-quote,
+.grid-item-spacing:has(.audio-button) > .large-quote,
+.grid-item:has(.audio-button) > p,
+.grid-item-spacing:has(.audio-button) > p,
+.grid-item:has(.audio-button) > h3,
+.grid-item-spacing:has(.audio-button) > h3 {
+  align-self: flex-start;
+  width: 100%;
+  margin-bottom: 1rem; /* Add spacing between text and button */
 }
 
 .audio-button:hover {
   background-color: var(--color-black);
   color: var(--color-white);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.audio-button:active {
+  transform: scale(0.95);
+}
+
+.audio-button svg {
+  width: 18px;
+  height: 18px;
 }
 
 /* Image quote section */
@@ -1137,14 +1656,15 @@ body.intro-active {
 }
 
 .card-image-wrapper {
-  width: 280px;
-  height: 380px;
+  width: 100%;
+  max-width: 100%;
   border: 8px solid white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: 2px;
   overflow: hidden;
   position: relative;
   transform: rotate(-2deg);
+  aspect-ratio: 280 / 380; /* Maintain original aspect ratio (approximately 0.737) */
 }
 
 .card-image {
@@ -1154,14 +1674,36 @@ body.intro-active {
   display: block;
 }
 
+/* Mobile: ensure image and quote stack vertically */
+@media (max-width: 768px) {
+  .image-quote-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .card-image-container {
+    grid-column: 1;
+    margin-bottom: 2rem;
+  }
+  
+  .large-quote-container {
+    grid-column: 1;
+  }
+  
+  .card-image-wrapper {
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+}
+
 /* Large quote container */
 .large-quote-container {
   grid-column: 7 / 13;
 }
 
 .large-quote {
-  font-size: var(--step-3);
-  line-height: var(--lh-h2);
+  font-size: var(--step-2);
+  line-height: var(--lh-h3);
   font-weight: 600;
   color: var(--color-black);
   font-style: italic;
@@ -1185,10 +1727,149 @@ body.intro-active {
 
 .kantlijn-image {
   flex-shrink: 0;
-  width: 200px;
+  width: 100%;
   height: auto;
-  max-height: 300px;
-  mix-blend-mode: multiply;
+  max-width: 100%;
+  filter: grayscale(100%);
+  opacity: 0.6;
+  position: relative;
+  z-index: 0; /* Behind text */
+  transform: scale(1.3); /* Same scale as anna-drawing */
+}
+
+/* Mobile: center all images */
+@media (max-width: 768px) {
+  .kantlijn-image {
+    position: static;
+    right: auto;
+    top: auto;
+    width: 100%;
+    max-width: 300px;
+    margin: 1.5rem auto;
+    display: block;
+    transform: none;
+  }
+  
+  .stok-image {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    display: block;
+  }
+  
+  .phone-image {
+    width: 100%;
+    max-width: 300px;
+    margin: 1rem auto;
+    display: block;
+  }
+  
+  .wachten-margin-image {
+    position: static;
+    width: 100%;
+    max-width: 250px;
+    margin: 2rem auto;
+    display: block;
+  }
+  
+  .eten-thee-margin-image {
+    position: static;
+    width: 100%;
+    max-width: 350px;
+    margin: 2rem auto;
+    display: block;
+  }
+  
+  .bowling-image-frame {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Hafid quote row - desktop layout */
+.hafid-quote-row {
+  display: flex;
+    flex-direction: column;
+  gap: 1rem;
+    align-items: flex-start;
+  }
+  
+/* STOK image - no overlap, just animation */
+.stok-image {
+  flex-shrink: 0;
+  width: 260px;
+  height: auto;
+  max-height: 390px;
+  display: block;
+  transform-origin: bottom center;
+}
+
+/* Desktop: Hafid quote and STOK in a row */
+@media (min-width: 769px) {
+  .hafid-quote-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .hafid-quote-row .large-quote {
+    flex: 1;
+    margin: 0;
+  }
+  
+  .hafid-quote-row .stok-image {
+    margin-top: 0;
+  }
+}
+
+/* Phone image - subtle buzz animation, keep color */
+.phone-image {
+  flex-shrink: 0;
+  width: 260px;
+  height: auto;
+  max-height: 390px;
+  display: block;
+  margin-top: 1rem;
+  transform-origin: center center;
+}
+
+/* Regiotaxi animated - allows horizontal movement and overflow */
+.regiotaxi-animated {
+  transform-origin: center center;
+  will-change: transform;
+  position: relative;
+}
+
+/* Container for regiotaxi images - allow overflow */
+.grid-item:has(.regiotaxi-animated) {
+  overflow: visible;
+}
+
+/* Wachten margin drawing - rocking animation, keep color */
+.wachten-margin-image {
+  position: relative;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 1; /* Full opacity for normal color */
+    width: 100%;
+  max-width: 100%;
+  transform-origin: bottom center;
+  filter: none; /* Ensure no grayscale on container */
+}
+
+.wachten-drawing {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: none; /* Remove grayscale - keep normal color */
+  transform-origin: bottom center; /* Pivot from bottom for rocking chair effect */
+}
+
+/* Desktop: wachten positioned via grid-column: 9 / 12 (handled above) */
+@media (min-width: 769px) {
+  .wachten-margin-image {
+    opacity: 0.5;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1197,18 +1878,150 @@ body.intro-active {
     align-items: flex-start;
   }
   
-  .kantlijn-image {
+  /* kantlijn-image already handled in main mobile section */
+}
+
+/* Eten en thee decorative margin image - positioned in right margin whitespace */
+.eten-thee-margin-image {
+  position: relative;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  filter: blur(1px);
+  width: 100%;
+  max-width: 100%;
+}
+
+.eten-thee-decorative {
+  width: 100%;
+  height: auto;
+  display: block;
+  transform: rotate(-8deg);
+  transform-origin: center;
+}
+
+/* Desktop: eten-thee positioned via grid-column: 9 / 12 (handled above) */
+@media (min-width: 769px) {
+  .eten-thee-margin-image {
+    opacity: 0.35;
+  }
+  
+  .eten-thee-decorative {
+    transform: rotate(-8deg);
+  }
+}
+
+/* Mobile: adjust positioning */
+@media (max-width: 768px) {
+  .eten-thee-margin-image {
+    position: static;
+    margin-right: auto;
+    margin-left: auto;
     width: 100%;
-    max-width: 200px;
+    max-width: 350px;
+    opacity: 0.3;
+    display: block;
+  }
+  
+  .eten-thee-decorative {
+    transform: rotate(-6deg);
+  }
+  
+  .stok-image {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    display: block;
+  }
+  
+  .wachten-margin-image {
+    position: static;
+    width: 100%;
+    max-width: 250px;
+    margin: 2rem auto;
+    display: block;
   }
 }
 
 /* Section heading */
 .section-heading {
-  font-size: var(--step-3);
-  line-height: var(--lh-h2);
+  font-size: var(--step-2);
+  line-height: var(--lh-h3);
   margin-bottom: 2rem;
   font-weight: 600;
+}
+
+/* Roadmap chapter - compact credits/colophon style */
+.roadmap-title {
+  margin-bottom: 3rem; /* Reduced from 5rem */
+}
+
+.roadmap-title-text {
+  font-size: var(--step-2); /* Smaller than regular section-title */
+  line-height: var(--lh-h3);
+  margin-bottom: 0;
+}
+
+.roadmap-section {
+  margin-bottom: 2rem; /* Compact spacing instead of grid-item-spacing-xl */
+}
+
+.roadmap-heading {
+  font-size: var(--step-1); /* Smaller headings */
+  line-height: var(--lh-h4);
+  font-weight: 600;
+  margin-bottom: 0.75rem; /* Tight spacing */
+  color: var(--color-black);
+}
+
+.roadmap-section .paragraph-base {
+  margin-bottom: 1rem; /* Reduced paragraph spacing */
+}
+
+.roadmap-section .paragraph-base:last-child {
+  margin-bottom: 0;
+}
+
+/* Confetti animation */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  opacity: 0.8;
+  animation: confetti-fall 3s linear forwards;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Sterke koffie section - extra bottom margin on container, not heading */
+.grid-item-spacing-xl:has(.section-heading + .anna-section) .section-heading {
+  margin-bottom: 2rem; /* Keep normal spacing between heading and content */
+}
+
+/* Sterke koffie section - extra spacing */
+.section-heading:has(+ .anna-section) {
+  margin-bottom: 10rem;
 }
 
 /* Small section heading */
@@ -1219,6 +2032,8 @@ body.intro-active {
   color: var(--color-black);
   margin-top: 0;
   margin-bottom: 0.75rem;
+  position: relative;
+  z-index: 1; /* Above portraits */
 }
 
 .section-heading-with-audio {
@@ -1600,10 +2415,6 @@ body.intro-active {
 
 /* Desktop Chapter Rail */
 .chapter-rail-desktop {
-  position: fixed;
-  left: 1.5rem;
-  top: 50%;
-  transform: translateY(-50%);
   display: none;
   flex-direction: column;
   gap: 1.25rem;
@@ -1614,6 +2425,13 @@ body.intro-active {
 @media (min-width: 1024px) {
   .chapter-rail-desktop {
     display: flex;
+    grid-column: var(--grid-sidebar-start) / var(--grid-sidebar-end);
+    position: sticky;
+    top: 50%;
+    transform: translateY(-50%);
+    align-self: start;
+    height: fit-content;
+    left: auto; /* Remove fixed positioning */
   }
 }
 
@@ -1651,8 +2469,8 @@ body.intro-active {
 
 .chapter-rail-item.active .chapter-rail-dot {
   background-color: var(--color-primary);
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-color: transparent;
   box-shadow: none;
 }
@@ -1674,6 +2492,7 @@ body.intro-active {
 
 .chapter-rail-item.active .chapter-rail-label {
   color: var(--color-black);
+  font-weight: 600;
 }
 
 .chapter-rail-item:hover .chapter-rail-label {
@@ -1684,10 +2503,5 @@ body.intro-active {
   color: var(--color-black);
 }
 
-/* Adjust content container to accommodate rail on desktop */
-@media (min-width: 1024px) {
-  .content-container {
-    padding-left: 12rem;
-  }
-}
+/* Padding workaround removed - now handled by grid */
 

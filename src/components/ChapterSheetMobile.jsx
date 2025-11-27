@@ -5,11 +5,29 @@ const ChapterSheetMobile = ({ chapters, currentChapterIndex, isOpen, onClose, on
   const sheetRef = useRef(null)
   const overlayRef = useRef(null)
 
+  // Debug: Log component props
+  useEffect(() => {
+    console.log('🟢 ChapterSheetMobile props:', {
+      chaptersCount: chapters?.length,
+      currentChapterIndex,
+      isOpen,
+      chapters: chapters?.map((ch, i) => ({
+        index: i,
+        id: ch.id,
+        title: ch.title,
+        shortTitle: ch.shortTitle,
+        isActive: i === currentChapterIndex
+      }))
+    })
+  }, [chapters, currentChapterIndex, isOpen])
+
   // Body scroll lock
   useEffect(() => {
     if (isOpen) {
+      console.log('🟢 ChapterSheetMobile: Opening sheet')
       document.body.style.overflow = 'hidden'
     } else {
+      console.log('🟢 ChapterSheetMobile: Closing sheet')
       document.body.style.overflow = ''
     }
     return () => {
@@ -44,6 +62,12 @@ const ChapterSheetMobile = ({ chapters, currentChapterIndex, isOpen, onClose, on
   }, [isOpen])
 
   const handleChapterClick = (index) => {
+    console.log('🟢 ChapterSheetMobile: Chapter clicked', {
+      clickedIndex: index,
+      chapterTitle: chapters[index]?.title,
+      previousIndex: currentChapterIndex,
+      previousTitle: chapters[currentChapterIndex]?.title
+    })
     onNavigate(index)
     onClose()
   }
